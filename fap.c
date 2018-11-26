@@ -2,32 +2,33 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-fap creer_fap_vide(int (*comparaison)(int, int))
+fap creer_fap_vide()
 {
-  fap resultat;
-
-  resultat.tete = NULL;
-  resultat.fctComparaison = comparaison;
-  return resultat;
+  return NULL;
 }
 
 fap inserer(fap f, int element, int priorite)
 {
-  struct maillon *nouveau, *courant, *precedent;
+  fap nouveau, courant, precedent;
 
-  nouveau = (struct maillon *) malloc(sizeof(struct maillon));
+  /* nouveau maillon */
+  nouveau = (fap) malloc(sizeof(struct maillon));
   nouveau->element = element;
   nouveau->priorite = priorite;
-  if ((f.tete == NULL) || f.fctComparaison(priorite,f.tete->priorite))
+
+  /* insertion en tete */
+  if ((f == NULL) || (priorite < f->priorite))
     {
-      nouveau->prochain = f.tete;
-      f.tete = nouveau;
+      nouveau->prochain = f;
+      f = nouveau;
     }
+
+  /* recherche de la bonne position et insertion */
   else
     {
-      precedent = f.tete;
-      courant = precedent->prochain;
-      while ((courant != NULL) && !f.fctComparaison(priorite,courant->priorite))
+      precedent = f;
+      courant = f->prochain;
+      while ((priorite >= courant->priorite) && (courant != NULL))
         {
           precedent = courant;
           courant = courant->prochain;
@@ -40,14 +41,15 @@ fap inserer(fap f, int element, int priorite)
 
 fap extraire(fap f, int *element, int *priorite)
 {
-  struct maillon *courant;
+  fap courant;
 
-  if (f.tete != NULL)
+  /* extraire le premier element si la fap n'est pas vide */
+  if (f != NULL)
     {
-      courant = f.tete;
+      courant = f;
       *element = courant->element;
       *priorite = courant->priorite;
-      f.tete = courant->prochain;
+      f = courant->prochain;
       free(courant);
     }
   return f;
@@ -55,14 +57,12 @@ fap extraire(fap f, int *element, int *priorite)
 
 int est_fap_vide(fap f)
 {
-  return f.tete == NULL;
+  return f == NULL;
 }
 
 void
 detruire_fap(fap f)
 {
-  int element, priorite;
-
-  while (!est_fap_vide(f))
-      f = extraire(f,&element,&priorite);
+  if (f != NULL)
+      free(f);
 }
