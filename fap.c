@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+// bla bla test
+
 fap creer_fap_vide(int (*comparaison)(int, int))
 {
   fap resultat;
