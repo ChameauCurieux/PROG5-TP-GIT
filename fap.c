@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-// bla bla test
+// bla bla 
 
 fap creer_fap_vide(int (*comparaison)(int, int))
 {
